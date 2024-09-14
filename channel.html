@@ -3,82 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Channel - EpicTube</title>
+    <title>Your Channel</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <header>
+    <div id="channel-container">
         <h1>Your Channel</h1>
-        <nav>
-            <a href="index.html">Home</a>
-            <a href="upload.html">Upload Video</a>
-            <button id="sign-out-btn">Sign Out</button>
-        </nav>
-    </header>
-    
-    <main>
-        <section id="video-list">
-            <!-- Videos will be dynamically inserted here -->
-        </section>
-    </main>
-    
-    <script type="module">
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-        import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
-
-        // Initialize Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyAyoFfvmHOGh7dWiUsPDMOQuhy9CfjV6Lo",
-            authDomain: "epictube-1.firebaseapp.com",
-            projectId: "epictube-1",
-            storageBucket: "epictube-1.appspot.com",
-            messagingSenderId: "776918098004",
-            appId: "1:776918098004:web:82ccb74c427f2075334dc1",
-            measurementId: "G-C61EL6BVKE"
-        };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth();
-        const firestore = getFirestore();
-
-        // Elements
-        const videoList = document.getElementById('video-list');
-        const signOutBtn = document.getElementById('sign-out-btn');
-
-        // Handle sign out
-        signOutBtn.addEventListener('click', async () => {
-            try {
-                await signOut(auth);
-                window.location.href = 'index.html';
-            } catch (error) {
-                console.error('Error signing out:', error);
-            }
-        });
-
-        // Load videos
-        document.addEventListener('DOMContentLoaded', async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const uid = urlParams.get('id');
-
-            if (uid) {
-                onAuthStateChanged(auth, async (user) => {
-                    if (user && user.uid === uid) {
-                        const q = query(collection(firestore, 'videos'), where('uid', '==', uid));
-                        const querySnapshot = await getDocs(q);
-                        videoList.innerHTML = '';
-                        querySnapshot.forEach((doc) => {
-                            const video = doc.data();
-                            const videoElement = document.createElement('div');
-                            videoElement.innerHTML = `<a href="${video.url}" target="_blank">${video.title}</a>`;
-                            videoList.appendChild(videoElement);
-                        });
-                    } else {
-                        window.location.href = 'index.html';
-                    }
-                });
-            } else {
-                window.location.href = 'index.html';
-            }
-        });
-    </script>
+        <div id="video-list"></div>
+        <a href="index.html" id="back-to-home">Back to Home</a>
+        <script type="module" src="channel.js" defer></script>
+    </div>
 </body>
 </html>
