@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Clone</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>YouTube Clone</h1>
+        <nav>
+            <a href="#upload">Upload Video</a>
+            <a href="#my-videos">My Videos</a>
+        </nav>
+    </header>
+    <main>
+        <section id="upload">
+            <h2>Upload Video</h2>
+            <form id="upload-form">
+                <input type="file" id="video-file" accept="video/*">
+                <button type="submit">Upload</button>
+            </form>
+        </section>
+        <section id="my-videos">
+            <h2>My Videos</h2>
+            <div id="video-list"></div>
+        </section>
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
