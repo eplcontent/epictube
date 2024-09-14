@@ -3,7 +3,7 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, si
 import { getFirestore, doc, setDoc, getDocs, collection, query, where } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
 
-// Initialize Firebase
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyAyoFfvmHOGh7dWiUsPDMOQuhy9CfjV6Lo",
     authDomain: "epictube-1.firebaseapp.com",
@@ -13,10 +13,12 @@ const firebaseConfig = {
     appId: "1:776918098004:web:82ccb74c427f2075334dc1",
     measurementId: "G-C61EL6BVKE"
 };
+
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth();
-const firestore = getFirestore();
-const storage = getStorage();
+const auth = getAuth(app);
+const firestore = getFirestore(app);
+const storage = getStorage(app);
 
 // Elements
 const registerBtn = document.getElementById('register-btn');
