@@ -13,7 +13,6 @@ const firebaseConfig = {
     appId: "1:776918098004:web:82ccb74c427f2075334dc1",
     measurementId: "G-C61EL6BVKE"
 };
-
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const firestore = getFirestore();
@@ -35,7 +34,7 @@ const registerEmailInput = document.getElementById('register-email');
 const registerPasswordInput = document.getElementById('register-password');
 const registerNameInput = document.getElementById('register-name');
 
-// Register
+// Register Button Event Listener
 registerBtn.addEventListener('click', async () => {
     const email = registerEmailInput.value;
     const password = registerPasswordInput.value;
@@ -54,7 +53,7 @@ registerBtn.addEventListener('click', async () => {
     }
 });
 
-// Sign In
+// Sign In Button Event Listener
 signInBtn.addEventListener('click', async () => {
     const email = signInEmailInput.value;
     const password = signInPasswordInput.value;
@@ -67,7 +66,7 @@ signInBtn.addEventListener('click', async () => {
     }
 });
 
-// Sign Out
+// Sign Out Button Event Listener
 signOutBtn.addEventListener('click', async () => {
     try {
         await signOut(auth);
@@ -77,7 +76,7 @@ signOutBtn.addEventListener('click', async () => {
     }
 });
 
-// Upload Video
+// Upload Video Button Event Listener
 uploadBtn.addEventListener('click', async () => {
     const file = fileInput.files[0];
     const title = videoTitleInput.value;
@@ -105,7 +104,7 @@ uploadBtn.addEventListener('click', async () => {
     }
 });
 
-// Authentication State Change
+// Authentication State Change Handler
 onAuthStateChanged(auth, (user) => {
     if (user) {
         authContainer.style.display = 'none';
@@ -118,7 +117,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
-// Channel Page
+// Channel Page Script
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const uid = urlParams.get('id');
@@ -130,11 +129,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         querySnapshot.forEach((doc) => {
             const video = doc.data();
             const videoElement = document.createElement('div');
-            videoElement.innerHTML = `<a href="${video.url}">${video.title}</a>`;
+            videoElement.innerHTML = `<a href="${video.url}" target="_blank">${video.title}</a>`;
             videoList.appendChild(videoElement);
         });
     } else {
         window.location.href = 'index.html';
     }
 });
-
