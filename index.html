@@ -3,132 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Epictube</title>
+    <title>EpicTube - Home</title>
     <link rel="stylesheet" href="styles.css">
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
-        import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAyoFfvmHOGh7dWiUsPDMOQuhy9CfjV6Lo",
-            authDomain: "epictube-1.firebaseapp.com",
-            projectId: "epictube-1",
-            storageBucket: "epictube-1.appspot.com",
-            messagingSenderId: "776918098004",
-            appId: "1:776918098004:web:82ccb74c427f2075334dc1",
-            measurementId: "G-C61EL6BVKE"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const storage = getStorage(app);
-        const firestore = getFirestore(app);
-        const analytics = getAnalytics(app);
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const signInBtn = document.getElementById('sign-in');
-            const registerBtn = document.getElementById('register');
-            const uploadBtn = document.getElementById('upload');
-            const signOutBtn = document.getElementById('sign-out');
-            const authContainer = document.getElementById('auth-container');
-            const uploadContainer = document.getElementById('upload-container');
-
-            // Sign in
-            signInBtn?.addEventListener('click', async () => {
-                const email = document.getElementById('sign-in-email').value;
-                const password = document.getElementById('sign-in-password').value;
-                try {
-                    await signInWithEmailAndPassword(auth, email, password);
-                } catch (error) {
-                    console.error('Error signing in:', error);
-                }
-            });
-
-            // Register
-            registerBtn?.addEventListener('click', async () => {
-                const email = document.getElementById('register-email').value;
-                const password = document.getElementById('register-password').value;
-                const displayName = document.getElementById('register-name').value;
-                try {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    const user = userCredential.user;
-                    await updateProfile(user, { displayName });
-                } catch (error) {
-                    console.error('Error registering:', error);
-                }
-            });
-
-            // Sign out
-            signOutBtn?.addEventListener('click', async () => {
-                try {
-                    await signOut(auth);
-                } catch (error) {
-                    console.error('Error signing out:', error);
-                }
-            });
-
-            // Upload video
-            uploadBtn?.addEventListener('click', () => {
-                const file = document.getElementById('video-file').files[0];
-                if (file) {
-                    const user = auth.currentUser;
-                    if (user) {
-                        const videoRef = ref(storage, `videos/${user.uid}/${file.name}`);
-                        uploadBytes(videoRef, file).then(() => {
-                            alert('Video uploaded successfully!');
-                            // Optionally, handle video URL and display or store it
-                        }).catch(error => console.error('Error uploading video:', error));
-                    } else {
-                        alert('You need to sign in to upload videos.');
-                    }
-                }
-            });
-
-            // Authentication state listener
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    authContainer.style.display = 'none';
-                    uploadContainer.style.display = 'block';
-                } else {
-                    authContainer.style.display = 'block';
-                    uploadContainer.style.display = 'none';
-                }
-            });
-        });
-    </script>
+    <script type="module" src="main.js" defer></script>
 </head>
 <body>
-    <header>
-        <h1>Welcome to Epictube</h1>
-    </header>
-    <main>
-        <div id="auth-container">
-            <h2>Sign In</h2>
-            <input type="email" id="sign-in-email" placeholder="Email">
-            <input type="password" id="sign-in-password" placeholder="Password">
-            <button id="sign-in">Sign In</button>
-
-            <h2>Register</h2>
-            <input type="text" id="register-name" placeholder="Name">
-            <input type="email" id="register-email" placeholder="Email">
-            <input type="password" id="register-password" placeholder="Password">
-            <button id="register">Register</button>
-        </div>
-
-        <div id="upload-container" style="display: none;">
-            <h2>Upload Video</h2>
-            <input type="file" id="video-file">
-            <button id="upload">Upload Video</button>
-            <button id="sign-out">Sign Out</button>
-        </div>
-    </main>
-    <footer>
-        <p>&copy; 2024 Epictube</p>
-    </footer>
+    <h1>Welcome to EpicTube</h1>
+    <div id="auth-container">
+        <a href="sign-in.html">Sign In</a>
+        <a href="register.html">Register</a>
+    </div>
+    <div id="upload-container" style="display: none;">
+        <h2>Upload Video</h2>
+        <input type="file" id="video-file">
+        <button id="upload">Upload Video</button>
+    </div>
+    <button id="sign-out" style="display: none;">Sign Out</button>
 </body>
 </html>
