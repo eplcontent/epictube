@@ -1,48 +1,41 @@
 body {
     font-family: 'Comic Sans MS', cursive, sans-serif;
+    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
-}
-
-header {
-    background: #333;
-    color: #fff;
-    padding: 1rem;
     text-align: center;
 }
 
-main {
-    padding: 2rem;
+h1 {
+    color: #333;
 }
 
-footer {
-    background: #333;
-    color: #fff;
-    padding: 1rem;
-    text-align: center;
-}
-
-a {
-    color: #007BFF;
-    text-decoration: none;
+input, button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
 button {
-    background-color: #007BFF;
-    border: none;
+    background-color: #007bff;
     color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
+    border: none;
     cursor: pointer;
-    border-radius: 4px;
 }
 
-input {
-    margin: 0.5rem 0;
-    padding: 0.5rem;
-    font-size: 1rem;
+button:hover {
+    background-color: #0056b3;
+}
+
+a {
+    display: block;
+    margin: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
