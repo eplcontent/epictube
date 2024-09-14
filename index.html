@@ -3,34 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your App</title>
+    <title>Epictube</title>
+    <script src="https://www.googletagmanager.com/gtag/js?id=G-C61EL6BVKE" async></script>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to external CSS file -->
+    <script type="module" src="main.js"></script>
 </head>
 <body>
-    <!-- Your content here -->
-
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-analytics.js";
-        // Import other Firebase services as needed
-        // import { getAuth } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-auth.js";
-        // import { getStorage } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-storage.js";
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyAyoFfvmHOGh7dWiUsPDMOQuhy9CfjV6Lo",
-            authDomain: "epictube-1.firebaseapp.com",
-            projectId: "epictube-1",
-            storageBucket: "epictube-1.appspot.com",
-            messagingSenderId: "776918098004",
-            appId: "1:776918098004:web:82ccb74c427f2075334dc1",
-            measurementId: "G-C61EL6BVKE"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        // Initialize other Firebase services as needed
-    </script>
+    <header>
+        <h1>Welcome to Epictube</h1>
+    </header>
+    <main>
+        <div id="auth-container">
+            <!-- Authentication content will be inserted here -->
+        </div>
+        <div id="upload-container" style="display: none;">
+            <h2>Upload Your Videos</h2>
+            <input type="file" id="video-file" accept="video/*">
+            <button id="upload-button">Upload Video</button>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 Epictube. All rights reserved.</p>
+    </footer>
 </body>
 </html>
