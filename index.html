@@ -3,21 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EpicTube - Home</title>
+    <title>EpicTube</title>
     <link rel="stylesheet" href="styles.css">
     <script type="module" src="main.js" defer></script>
 </head>
 <body>
-    <h1>Welcome to EpicTube</h1>
     <div id="auth-container">
-        <a href="sign-in.html">Sign In</a>
-        <a href="register.html">Register</a>
+        <h1>Welcome to EpicTube</h1>
+        <div>
+            <h2>Sign In</h2>
+            <input id="sign-in-email" type="email" placeholder="Email" required>
+            <input id="sign-in-password" type="password" placeholder="Password" required>
+            <button id="sign-in-btn">Sign In</button>
+        </div>
+        <div>
+            <h2>Register</h2>
+            <input id="register-email" type="email" placeholder="Email" required>
+            <input id="register-password" type="password" placeholder="Password" required>
+            <input id="register-name" type="text" placeholder="Channel Name" required>
+            <button id="register-btn">Register</button>
+        </div>
     </div>
     <div id="upload-container" style="display: none;">
         <h2>Upload Video</h2>
-        <input type="file" id="video-file">
-        <button id="upload">Upload Video</button>
+        <input id="file-input" type="file" accept="video/*">
+        <input id="video-title" type="text" placeholder="Video Title">
+        <button id="upload-btn">Upload Video</button>
+        <div id="video-list"></div>
     </div>
-    <button id="sign-out" style="display: none;">Sign Out</button>
+    <button id="sign-out-btn" style="display: none;">Sign Out</button>
 </body>
 </html>
