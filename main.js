@@ -118,23 +118,3 @@ onAuthStateChanged(auth, (user) => {
         signOutBtn.style.display = 'none';
     }
 });
-
-// Channel Page Script
-document.addEventListener('DOMContentLoaded', async () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const uid = urlParams.get('id');
-
-    if (uid && uid === auth.currentUser?.uid) {
-        const q = query(collection(firestore, 'videos'), where('uid', '==', uid));
-        const querySnapshot = await getDocs(q);
-        videoList.innerHTML = '';
-        querySnapshot.forEach((doc) => {
-            const video = doc.data();
-            const videoElement = document.createElement('div');
-            videoElement.innerHTML = `<a href="${video.url}" target="_blank">${video.title}</a>`;
-            videoList.appendChild(videoElement);
-        });
-    } else {
-        window.location.href = 'index.html';
-    }
-});
