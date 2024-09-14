@@ -20,7 +20,7 @@ const auth = getAuth(app);
 const firestore = getFirestore(app);
 const storage = getStorage(app);
 
-// Elements
+// DOM Elements
 const registerBtn = document.getElementById('register-btn');
 const signInBtn = document.getElementById('sign-in-btn');
 const signOutBtn = document.getElementById('sign-out-btn');
