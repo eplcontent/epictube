@@ -46,6 +46,17 @@
             window.location.href = 'index.html';
         }
 
+        // Check if the channel exists and if the user is authorized to view it
+        function isChannelValid(channelName) {
+            const existingChannels = ['EPICONTENT', 'CoolChannel']; // Add your channel names here
+            return existingChannels.includes(channelName);
+        }
+
+        if (!isChannelValid(channelName)) {
+            alert('Channel does not exist.');
+            window.location.href = 'index.html';
+        }
+
         if (loggedInUser !== channelName) {
             alert('You are not authorized to view this channel.');
             window.location.href = 'index.html';
@@ -65,6 +76,11 @@
 
             if (!videoTitle || !videoFile) {
                 errorElement.textContent = 'Please provide both title and video file.';
+                return;
+            }
+
+            if (loggedInUser !== channelName) {
+                errorElement.textContent = 'You can only upload videos to your own channel.';
                 return;
             }
 
