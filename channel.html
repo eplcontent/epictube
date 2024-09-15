@@ -13,6 +13,7 @@
         .video-item { margin-bottom: 20px; }
         input[type="text"] { width: calc(100% - 22px); padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; }
         input[type="file"] { margin: 10px 0; }
+        .error { color: red; }
     </style>
 </head>
 <body>
@@ -22,6 +23,7 @@
         <button id="upload-button" onclick="toggleUpload()">Upload Video</button>
         <div id="upload-form" style="display: none;">
             <h2>Upload Video</h2>
+            <div class="error" id="upload-error"></div>
             <input type="text" id="video-title" placeholder="Video Title" />
             <input type="file" id="video-file" />
             <button onclick="uploadVideo()">Upload</button>
@@ -37,6 +39,17 @@
         }
 
         const channelName = getQueryParam('channel') || 'DefaultChannel';
+        const loggedInUser = localStorage.getItem('loggedInUser');
+
+        if (!loggedInUser) {
+            alert('You must be logged in to access this page.');
+            window.location.href = 'index.html';
+        }
+
+        if (loggedInUser !== channelName) {
+            alert('You are not authorized to view this channel.');
+            window.location.href = 'index.html';
+        }
 
         document.getElementById('channel-title').textContent = channelName;
 
@@ -48,15 +61,10 @@
         function uploadVideo() {
             const videoTitle = document.getElementById('video-title').value;
             const videoFile = document.getElementById('video-file').files[0];
-            const loggedInUser = localStorage.getItem('loggedInUser');
-
-            if (!loggedInUser) {
-                alert('You must be logged in to upload videos.');
-                return;
-            }
+            const errorElement = document.getElementById('upload-error');
 
             if (!videoTitle || !videoFile) {
-                alert('Please provide both title and video file.');
+                errorElement.textContent = 'Please provide both title and video file.';
                 return;
             }
 
