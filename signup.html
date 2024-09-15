@@ -10,11 +10,13 @@
         input[type="text"], input[type="password"] { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; }
         button { background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; }
         button:hover { background-color: #0056b3; }
+        .error { color: red; }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Sign Up</h1>
+        <div class="error" id="signup-error"></div>
         <input type="text" id="username" placeholder="Username" />
         <input type="password" id="password" placeholder="Password" />
         <button onclick="signup()">Sign Up</button>
@@ -25,14 +27,27 @@
         function signup() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('signup-error');
 
             if (!username || !password) {
-                alert('Please enter both username and password.');
+                errorElement.textContent = 'Please enter both username and password.';
                 return;
             }
 
-            // For demonstration, we'll assume successful signup
-            // In practice, you'd want to handle user registration properly
+            // Check if the user already exists
+            const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+            if (existingUsers.find(user => user.username === username)) {
+                errorElement.textContent = 'Username already exists.';
+                return;
+            }
+
+            // Save user data
+            existingUsers.push({ username, password });
+            localStorage.setItem('users', JSON.stringify(existingUsers));
+
+            // Create an empty channel for the new user
+            localStorage.setItem(username, JSON.stringify([]));
+
             alert('Signup successful. Please login.');
             window.location.href = 'login.html';
         }
