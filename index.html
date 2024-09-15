@@ -9,8 +9,7 @@
         .container { max-width: 800px; margin: 0 auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
         button { background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; }
         button:hover { background-color: #0056b3; }
-        ul { list-style-type: none; padding: 0; }
-        li { margin: 10px 0; }
+        .error { color: red; }
     </style>
 </head>
 <body>
@@ -23,10 +22,6 @@
         <div id="logout-section" style="display: none;">
             <button onclick="signOut()">Sign Out</button>
         </div>
-        <h2>Channels</h2>
-        <ul id="channel-list">
-            <!-- Dynamic channel links will be injected here -->
-        </ul>
     </div>
 
     <script>
@@ -47,21 +42,8 @@
             window.location.href = 'index.html';
         }
 
-        function loadChannels() {
-            const channels = ['EPICONTENT', 'CoolChannel']; // Add more channels here
-            const channelList = document.getElementById('channel-list');
-            channelList.innerHTML = '';
-
-            channels.forEach(channel => {
-                const li = document.createElement('li');
-                li.innerHTML = `<a href="channel.html?channel=${channel}">${channel}</a>`;
-                channelList.appendChild(li);
-            });
-        }
-
-        // Check login status and load channels on page load
+        // Check login status on page load
         checkLoginStatus();
-        loadChannels();
     </script>
 </body>
 </html>
