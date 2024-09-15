@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Channel</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="channel-title">Channel</h1>
+        <button onclick="window.history.back()">Back</button>
+    </div>
+
+    <script>
+        function getChannelNameFromURL() {
+            // Get the current URL path
+            const path = window.location.pathname;
+            // Extract channel name from URL
+            const parts = path.split('/');
+            return parts[parts.length - 1];
+        }
+
+        function displayChannelContent(channelName) {
+            document.getElementById('channel-title').textContent = `Welcome to ${channelName}`;
+            // Add logic here to display channel-specific content
+        }
+
+        const channelName = getChannelNameFromURL();
+        displayChannelContent(channelName);
+    </script>
+</body>
+</html>
