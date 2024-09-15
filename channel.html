@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EPICONTENT</title>
+    <title>Channel</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
         .container { max-width: 800px; margin: 0 auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
@@ -17,7 +17,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>EPICONTENT</h1>
+        <h1 id="channel-title">Channel</h1>
         <button onclick="window.location.href='index.html'">Back to Home</button>
         <button id="upload-button" onclick="toggleUpload()">Upload Video</button>
         <div id="upload-form" style="display: none;">
@@ -31,6 +31,15 @@
     </div>
 
     <script>
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        const channelName = getQueryParam('channel') || 'DefaultChannel';
+
+        document.getElementById('channel-title').textContent = channelName;
+
         function toggleUpload() {
             const uploadForm = document.getElementById('upload-form');
             uploadForm.style.display = uploadForm.style.display === 'none' ? 'block' : 'none';
@@ -51,7 +60,7 @@
                 return;
             }
 
-            const videoList = JSON.parse(localStorage.getItem('videoList') || '[]');
+            const videoList = JSON.parse(localStorage.getItem(channelName) || '[]');
             const videoURL = URL.createObjectURL(videoFile);
 
             videoList.push({
@@ -60,12 +69,12 @@
                 user: loggedInUser
             });
 
-            localStorage.setItem('videoList', JSON.stringify(videoList));
+            localStorage.setItem(channelName, JSON.stringify(videoList));
             displayVideos();
         }
 
         function displayVideos() {
-            const videoList = JSON.parse(localStorage.getItem('videoList') || '[]');
+            const videoList = JSON.parse(localStorage.getItem(channelName) || '[]');
             const videoListContainer = document.getElementById('video-list');
             videoListContainer.innerHTML = '';
 
