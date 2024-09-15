@@ -38,22 +38,11 @@
             return urlParams.get(param);
         }
 
-        const channelName = getQueryParam('channel') || 'DefaultChannel';
+        const channelName = getQueryParam('channel');
         const loggedInUser = localStorage.getItem('loggedInUser');
 
         if (!loggedInUser) {
             alert('You must be logged in to access this page.');
-            window.location.href = 'index.html';
-        }
-
-        // Check if the channel exists and if the user is authorized to view it
-        function isChannelValid(channelName) {
-            const existingChannels = ['EPICONTENT', 'CoolChannel']; // Add your channel names here
-            return existingChannels.includes(channelName);
-        }
-
-        if (!isChannelValid(channelName)) {
-            alert('Channel does not exist.');
             window.location.href = 'index.html';
         }
 
