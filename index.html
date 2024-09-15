@@ -16,14 +16,52 @@
 <body>
     <div class="container">
         <h1>Welcome to EpicTube</h1>
-        <button onclick="window.location.href='login.html'">Login</button>
-        <button onclick="window.location.href='signup.html'">Sign Up</button>
+        <div id="auth-buttons">
+            <button id="login-button" onclick="window.location.href='login.html'">Login</button>
+            <button id="signup-button" onclick="window.location.href='signup.html'">Sign Up</button>
+        </div>
+        <div id="logout-section" style="display: none;">
+            <button onclick="signOut()">Sign Out</button>
+        </div>
         <h2>Channels</h2>
-        <ul>
-            <li><a href="channel.html?channel=EPICONTENT">EPICONTENT</a></li>
-            <li><a href="channel.html?channel=CoolChannel">CoolChannel</a></li>
-            <!-- Add more channels here -->
+        <ul id="channel-list">
+            <!-- Dynamic channel links will be injected here -->
         </ul>
     </div>
+
+    <script>
+        function checkLoginStatus() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                document.getElementById('auth-buttons').style.display = 'none';
+                document.getElementById('logout-section').style.display = 'block';
+            } else {
+                document.getElementById('auth-buttons').style.display = 'block';
+                document.getElementById('logout-section').style.display = 'none';
+            }
+        }
+
+        function signOut() {
+            localStorage.removeItem('loggedInUser');
+            checkLoginStatus();
+            window.location.href = 'index.html';
+        }
+
+        function loadChannels() {
+            const channels = ['EPICONTENT', 'CoolChannel']; // Add more channels here
+            const channelList = document.getElementById('channel-list');
+            channelList.innerHTML = '';
+
+            channels.forEach(channel => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a href="channel.html?channel=${channel}">${channel}</a>`;
+                channelList.appendChild(li);
+            });
+        }
+
+        // Check login status and load channels on page load
+        checkLoginStatus();
+        loadChannels();
+    </script>
 </body>
 </html>
