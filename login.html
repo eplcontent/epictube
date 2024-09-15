@@ -34,9 +34,17 @@
                 return;
             }
 
-            // For demonstration, we'll assume successful login
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(user => user.username === username && user.password === password);
+
+            if (!user) {
+                errorElement.textContent = 'Invalid username or password.';
+                return;
+            }
+
+            // Store the logged-in user
             localStorage.setItem('loggedInUser', username);
-            window.location.href = `channel.html?user=${username}`;
+            window.location.href = `channel.html?channel=${username}`;
         }
     </script>
 </body>
