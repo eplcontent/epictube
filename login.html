@@ -5,12 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
-        .container { max-width: 400px; margin: 0 auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-        input[type="text"], input[type="password"] { width: calc(100% - 22px); padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; }
-        button { background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #0056b3; }
-        .error { color: red; }
+        body { 
+            font-family: 'Comic Sans MS', cursive, sans-serif; 
+            background: linear-gradient(to bottom, #ffffff, #f4f4f4); 
+            margin: 0; 
+            padding: 0; 
+        }
+        .container { 
+            max-width: 400px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: #fff; 
+            border-radius: 8px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
+        input[type="text"], input[type="password"] { 
+            width: 100%; 
+            padding: 10px; 
+            margin: 10px 0; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+        }
+        button { 
+            background-color: #007bff; 
+            color: #fff; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 16px; 
+        }
+        button:hover { 
+            background-color: #0056b3; 
+        }
+        .error { 
+            color: red; 
+        }
     </style>
 </head>
 <body>
@@ -21,6 +51,7 @@
         <input type="password" id="password" placeholder="Password" />
         <button onclick="login()">Login</button>
         <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
+        <p><a href="index.html">Back to Home</a></p>
     </div>
 
     <script>
@@ -34,13 +65,11 @@
                 return;
             }
 
-            // Validate user credentials
-            const user = JSON.parse(localStorage.getItem('user'));
-            if (user && user.username === username && user.password === password) {
-                // Set logged-in user in session storage
-                sessionStorage.setItem('loggedInUser', username);
-                // Redirect to the user's channel
-                window.location.href = `channel.html?channel=${username}`;
+            const savedPassword = localStorage.getItem(username);
+
+            if (savedPassword && savedPassword === password) {
+                localStorage.setItem('loggedInUser', username);
+                window.location.href = 'index.html';
             } else {
                 errorElement.textContent = 'Invalid username or password.';
             }
