@@ -139,8 +139,13 @@
             });
         }
 
-        displayVideos();
+        function checkAuthorization() {
+            if (loggedInUser && loggedInUser === channelName) {
+                displayVideos();
+            }
+        }
+
+        checkAuthorization();
     </script>
 </body>
 </html>
-
