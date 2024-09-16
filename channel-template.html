@@ -67,22 +67,11 @@
     </div>
 
     <script>
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
-
-        const channelName = getQueryParam('channel');
+        const channelName = 'EPICONTENT'; // This is just a placeholder. You may need to adjust if using dynamic logic.
         const loggedInUser = localStorage.getItem('loggedInUser');
 
         if (!loggedInUser) {
-            alert('You must be logged in to access this page.');
-            window.location.href = 'index.html';
-        }
-
-        if (loggedInUser !== channelName) {
-            alert('You are not authorized to view this channel.');
-            window.location.href = 'index.html';
+            document.getElementById('upload-button').style.display = 'none';  // Hide upload button if not logged in
         }
 
         document.getElementById('channel-title').textContent = channelName;
@@ -102,7 +91,7 @@
                 return;
             }
 
-            if (loggedInUser !== channelName) {
+            if (loggedInUser && loggedInUser !== channelName) {
                 errorElement.textContent = 'You can only upload videos to your own channel.';
                 return;
             }
@@ -112,7 +101,7 @@
             videoList.push({
                 title: videoTitle,
                 url: videoURL,
-                user: loggedInUser
+                user: loggedInUser || 'Anonymous'
             });
 
             localStorage.setItem(channelName, JSON.stringify(videoList));
