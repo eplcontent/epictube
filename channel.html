@@ -5,88 +5,156 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Channel</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-        button { background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #0056b3; }
-        .video-list { margin: 20px 0; }
-        .video-item { margin-bottom: 20px; }
-        input[type="text"] { width: calc(100% - 22px); padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; }
-        .error { color: red; }
+        body { 
+            font-family: 'Comic Sans MS', cursive, sans-serif; 
+            background: linear-gradient(to bottom, #ffffff, #f4f4f4); 
+            margin: 0; 
+            padding: 0; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: #fff; 
+            border-radius: 8px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
+        button { 
+            background-color: #007bff; 
+            color: #fff; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 16px; 
+        }
+        button:hover { 
+            background-color: #0056b3; 
+        }
+        .video-list { 
+            margin: 20px 0; 
+        }
+        .video-item { 
+            margin-bottom: 20px; 
+        }
+        input[type="text"] { 
+            width: calc(100% - 22px); 
+            padding: 10px; 
+            margin: 10px 0; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+        }
+        .error { 
+            color: red; 
+        }
+        img { 
+            max-width: 100px; 
+            border-radius: 50%; 
+            margin-bottom: 20px; 
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 id="channel-title">Channel</h1>
         <button onclick="window.location.href='index.html'">Back to Home</button>
-        <button id="upload-button" onclick="toggleUpload()">Add Video</button>
+        <button id="upload-button" onclick="toggleUpload()">Upload Video</button>
         <div id="upload-form" style="display: none;">
-            <h2>Add Video</h2>
+            <h2>Upload Video</h2>
             <div class="error" id="upload-error"></div>
             <input type="text" id="video-title" placeholder="Video Title" />
             <input type="text" id="video-url" placeholder="Video URL" />
-            <button onclick="addVideo()">Add</button>
+            <button onclick="uploadVideo()">Upload</button>
         </div>
         <h2>Video List</h2>
         <div id="video-list" class="video-list"></div>
     </div>
 
     <script>
-        function getQueryParam(param) {
+        function getQueryStringParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+            return urlParams.get(name);
         }
 
-        const channelName = getQueryParam('channel');
-        document.getElementById('channel-title').textContent = channelName;
+        function loadChannel() {
+            const channel = getQueryStringParameter('channel');
+            const loggedInUser = localStorage.getItem('loggedInUser');
+
+            if (!channel) {
+                document.getElementById('channel-title').textContent = 'Channel Not Found';
+                return;
+            }
+
+            document.getElementById('channel-title').textContent = `${channel}'s Channel`;
+
+            // Load profile picture
+            const profilePictureURL = localStorage.getItem(`${channel}_profilePicture`);
+            if (profilePictureURL) {
+                const profilePictureSection = document.createElement('div');
+                profilePictureSection.innerHTML = `<img src="${profilePictureURL}" alt="${channel}'s Profile Picture">`;
+                document.querySelector('.container').insertBefore(profilePictureSection, document.querySelector('#upload-button'));
+            }
+
+            // Check if logged-in user is the same as the channel owner
+            if (loggedInUser && loggedInUser === channel) {
+                document.getElementById('upload-button').style.display = 'inline';
+            } else {
+                document.getElementById('upload-button').style.display = 'none';
+            }
+
+            // Load videos
+            loadVideos(channel);
+        }
+
+        function loadVideos(channel) {
+            const videoList = document.getElementById('video-list');
+            videoList.innerHTML = '';
+
+            const videos = JSON.parse(localStorage.getItem(`${channel}_videos`) || '[]');
+            videos.forEach(video => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'video-item';
+                videoItem.innerHTML = `<h3>${video.title}</h3><a href="${video.url}" target="_blank">Watch Video</a>`;
+                videoList.appendChild(videoItem);
+            });
+        }
 
         function toggleUpload() {
             const uploadForm = document.getElementById('upload-form');
             uploadForm.style.display = uploadForm.style.display === 'none' ? 'block' : 'none';
         }
 
-        function addVideo() {
+        function uploadVideo() {
             const videoTitle = document.getElementById('video-title').value;
-            const videoUrl = document.getElementById('video-url').value;
+            const videoURL = document.getElementById('video-url').value;
+            const channel = getQueryStringParameter('channel');
+            const loggedInUser = localStorage.getItem('loggedInUser');
             const errorElement = document.getElementById('upload-error');
 
-            if (!videoTitle || !videoUrl) {
-                errorElement.textContent = 'Please provide both title and video URL.';
+            if (!videoTitle || !videoURL) {
+                errorElement.textContent = 'Please provide both video title and URL.';
                 return;
             }
 
-            const videoList = JSON.parse(localStorage.getItem(channelName) || '[]');
-            
-            videoList.push({
-                title: videoTitle,
-                url: videoUrl
-            });
+            if (loggedInUser !== channel) {
+                errorElement.textContent = 'You can only upload videos to your own channel.';
+                return;
+            }
 
-            localStorage.setItem(channelName, JSON.stringify(videoList));
-            displayVideos();
+            let videos = JSON.parse(localStorage.getItem(`${channel}_videos`) || '[]');
+            videos.push({ title: videoTitle, url: videoURL });
+            localStorage.setItem(`${channel}_videos`, JSON.stringify(videos));
+            loadVideos(channel);
+
+            // Clear form
+            document.getElementById('video-title').value = '';
+            document.getElementById('video-url').value = '';
+            errorElement.textContent = '';
         }
 
-        function displayVideos() {
-            const videoList = JSON.parse(localStorage.getItem(channelName) || '[]');
-            const videoListContainer = document.getElementById('video-list');
-            videoListContainer.innerHTML = '';
-
-            videoList.forEach(video => {
-                const videoItem = document.createElement('div');
-                videoItem.classList.add('video-item');
-                videoItem.innerHTML = `
-                    <h3>${video.title}</h3>
-                    <video width="600" controls>
-                        <source src="${video.url}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                `;
-                videoListContainer.appendChild(videoItem);
-            });
-        }
-
-        // Display videos on page load
-        displayVideos();
+        // Load channel on page load
+        loadChannel();
     </script>
 </body>
 </html>
+
