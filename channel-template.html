@@ -67,7 +67,7 @@
     </div>
 
     <script>
-        const channelName = 'EPICONTENT'; // This is just a placeholder. You may need to adjust if using dynamic logic.
+        const channelName = 'EPICONTENT'; // This is just a placeholder. Adjust if using dynamic logic.
         const loggedInUser = localStorage.getItem('loggedInUser');
 
         if (!loggedInUser) {
@@ -129,7 +129,13 @@
             });
         }
 
-        displayVideos();
+        function checkAuthorization() {
+            if (loggedInUser && loggedInUser === channelName) {
+                displayVideos();
+            }
+        }
+
+        checkAuthorization();
     </script>
 </body>
 </html>
