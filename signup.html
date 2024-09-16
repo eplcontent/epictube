@@ -5,12 +5,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
-        .container { max-width: 400px; margin: 0 auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-        input[type="text"], input[type="password"] { width: calc(100% - 22px); padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; }
-        button { background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #0056b3; }
-        .error { color: red; }
+        body { 
+            font-family: 'Comic Sans MS', cursive, sans-serif; 
+            background: linear-gradient(to bottom, #ffffff, #f4f4f4); 
+            margin: 0; 
+            padding: 0; 
+        }
+        .container { 
+            max-width: 400px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: #fff; 
+            border-radius: 8px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
+        input[type="text"], input[type="password"] { 
+            width: 100%; 
+            padding: 10px; 
+            margin: 10px 0; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+        }
+        button { 
+            background-color: #007bff; 
+            color: #fff; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 16px; 
+        }
+        button:hover { 
+            background-color: #0056b3; 
+        }
+        .error { 
+            color: red; 
+        }
     </style>
 </head>
 <body>
@@ -21,6 +51,7 @@
         <input type="password" id="password" placeholder="Password" />
         <button onclick="signUp()">Sign Up</button>
         <p>Already have an account? <a href="login.html">Login</a></p>
+        <p><a href="index.html">Back to Home</a></p>
     </div>
 
     <script>
@@ -34,17 +65,12 @@
                 return;
             }
 
-            // Save user credentials in local storage (for demonstration purposes)
-            localStorage.setItem('user', JSON.stringify({ username, password }));
-
-            // Create a new channel for the user
-            const channels = JSON.parse(localStorage.getItem('channels') || '[]');
-            if (!channels.includes(username)) {
-                channels.push(username);
-                localStorage.setItem('channels', JSON.stringify(channels));
+            if (localStorage.getItem(username)) {
+                errorElement.textContent = 'Username already exists.';
+                return;
             }
 
-            // Redirect to login page
+            localStorage.setItem(username, password);
             alert('Sign up successful! You can now log in.');
             window.location.href = 'login.html';
         }
