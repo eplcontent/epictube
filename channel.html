@@ -76,11 +76,10 @@
         const loggedInUser = localStorage.getItem('loggedInUser');
 
         if (!loggedInUser) {
-            alert('You must be logged in to access this page.');
-            window.location.href = 'index.html';
+            document.getElementById('upload-button').style.display = 'none';  // Hide upload button if not logged in
         }
 
-        if (loggedInUser !== channelName) {
+        if (loggedInUser && loggedInUser !== channelName) {
             alert('You are not authorized to view this channel.');
             window.location.href = 'index.html';
         }
@@ -102,7 +101,7 @@
                 return;
             }
 
-            if (loggedInUser !== channelName) {
+            if (loggedInUser && loggedInUser !== channelName) {
                 errorElement.textContent = 'You can only upload videos to your own channel.';
                 return;
             }
@@ -112,11 +111,12 @@
             videoList.push({
                 title: videoTitle,
                 url: videoURL,
-                user: loggedInUser
+                user: loggedInUser || 'Anonymous'
             });
 
             localStorage.setItem(channelName, JSON.stringify(videoList));
             displayVideos();
+            document.getElementById('upload-form').style.display = 'none';  // Hide upload form after successful upload
         }
 
         function displayVideos() {
@@ -139,8 +139,8 @@
             });
         }
 
-        // Display videos on page load
         displayVideos();
     </script>
 </body>
 </html>
+
