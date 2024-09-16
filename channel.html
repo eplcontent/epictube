@@ -12,7 +12,6 @@
         .video-list { margin: 20px 0; }
         .video-item { margin-bottom: 20px; }
         input[type="text"] { width: calc(100% - 22px); padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; }
-        input[type="file"] { margin: 10px 0; }
         .error { color: red; }
     </style>
 </head>
@@ -20,13 +19,13 @@
     <div class="container">
         <h1 id="channel-title">Channel</h1>
         <button onclick="window.location.href='index.html'">Back to Home</button>
-        <button id="upload-button" onclick="toggleUpload()">Upload Video</button>
+        <button id="upload-button" onclick="toggleUpload()">Add Video</button>
         <div id="upload-form" style="display: none;">
-            <h2>Upload Video</h2>
+            <h2>Add Video</h2>
             <div class="error" id="upload-error"></div>
             <input type="text" id="video-title" placeholder="Video Title" />
-            <input type="file" id="video-file" />
-            <button onclick="uploadVideo()">Upload</button>
+            <input type="text" id="video-url" placeholder="Video URL" />
+            <button onclick="addVideo()">Add</button>
         </div>
         <h2>Video List</h2>
         <div id="video-list" class="video-list"></div>
@@ -39,18 +38,6 @@
         }
 
         const channelName = getQueryParam('channel');
-        const loggedInUser = localStorage.getItem('loggedInUser');
-
-        if (!loggedInUser) {
-            alert('You must be logged in to access this page.');
-            window.location.href = 'index.html';
-        }
-
-        if (loggedInUser !== channelName) {
-            alert('You are not authorized to view this channel.');
-            window.location.href = 'index.html';
-        }
-
         document.getElementById('channel-title').textContent = channelName;
 
         function toggleUpload() {
@@ -58,28 +45,21 @@
             uploadForm.style.display = uploadForm.style.display === 'none' ? 'block' : 'none';
         }
 
-        function uploadVideo() {
+        function addVideo() {
             const videoTitle = document.getElementById('video-title').value;
-            const videoFile = document.getElementById('video-file').files[0];
+            const videoUrl = document.getElementById('video-url').value;
             const errorElement = document.getElementById('upload-error');
 
-            if (!videoTitle || !videoFile) {
-                errorElement.textContent = 'Please provide both title and video file.';
-                return;
-            }
-
-            if (loggedInUser !== channelName) {
-                errorElement.textContent = 'You can only upload videos to your own channel.';
+            if (!videoTitle || !videoUrl) {
+                errorElement.textContent = 'Please provide both title and video URL.';
                 return;
             }
 
             const videoList = JSON.parse(localStorage.getItem(channelName) || '[]');
-            const videoURL = URL.createObjectURL(videoFile);
-
+            
             videoList.push({
                 title: videoTitle,
-                url: videoURL,
-                user: loggedInUser
+                url: videoUrl
             });
 
             localStorage.setItem(channelName, JSON.stringify(videoList));
@@ -100,7 +80,6 @@
                         <source src="${video.url}" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
-                    <p>Uploaded by: ${video.user}</p>
                 `;
                 videoListContainer.appendChild(videoItem);
             });
