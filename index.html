@@ -3,71 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EpicTube</title>
+    <title>Home</title>
     <style>
-        body { 
-            font-family: 'Comic Sans MS', cursive, sans-serif; 
-            background: linear-gradient(to bottom, #ffffff, #f4f4f4); 
-            margin: 0; 
-            padding: 0; 
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: linear-gradient(to bottom, #ffffff, #f5f5f5);
         }
-        .container { 
-            max-width: 800px; 
-            margin: 0 auto; 
-            padding: 20px; 
-            background: #fff; 
-            border-radius: 8px; 
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        button { 
-            background-color: #007bff; 
-            color: #fff; 
-            border: none; 
-            padding: 10px 20px; 
-            border-radius: 4px; 
-            cursor: pointer; 
-            font-size: 16px; 
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
         }
-        button:hover { 
-            background-color: #0056b3; 
+        button:hover {
+            background-color: #0056b3;
         }
-        .error { 
-            color: red; 
+        .error {
+            color: red;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>Welcome to EpicTube</h1>
-        <div id="auth-buttons">
-            <button id="login-button" onclick="window.location.href='login.html'">Login</button>
-            <button id="signup-button" onclick="window.location.href='signup.html'">Sign Up</button>
+        <div id="login-form">
+            <input type="text" id="username" placeholder="Enter your username" />
+            <button onclick="login()">Login</button>
         </div>
-        <div id="logout-section" style="display: none;">
-            <button onclick="signOut()">Sign Out</button>
-            <button onclick="window.location.href='profile.html'">Profile</button>
-        </div>
+        <button id="go-to-channel" style="display: none;" onclick="goToChannel()">Go to Your Channel</button>
     </div>
 
     <script>
-        function checkLoginStatus() {
-            const loggedInUser = localStorage.getItem('loggedInUser');
-            if (loggedInUser) {
-                document.getElementById('auth-buttons').style.display = 'none';
-                document.getElementById('logout-section').style.display = 'block';
+        function login() {
+            const username = document.getElementById('username').value;
+            if (username) {
+                localStorage.setItem('loggedInUser', username);
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('go-to-channel').style.display = 'block';
             } else {
-                document.getElementById('auth-buttons').style.display = 'block';
-                document.getElementById('logout-section').style.display = 'none';
+                alert('Please enter a username.');
             }
         }
 
-        function signOut() {
-            localStorage.removeItem('loggedInUser');
-            checkLoginStatus();
+        function goToChannel() {
+            const loggedInUser = localStorage.getItem('loggedInUser');
+            if (loggedInUser) {
+                window.location.href = `channel.html?channel=${loggedInUser}`;
+            } else {
+                alert('You must be logged in to go to your channel.');
+            }
         }
-
-        // Check login status on page load
-        checkLoginStatus();
     </script>
 </body>
 </html>
