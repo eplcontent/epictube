@@ -7,7 +7,7 @@
     <style>
         body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
         .container { max-width: 400px; margin: 0 auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-        input[type="text"], input[type="password"] { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; }
+        input[type="text"], input[type="password"] { width: calc(100% - 22px); padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; }
         button { background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; }
         button:hover { background-color: #0056b3; }
         .error { color: red; }
@@ -19,12 +19,12 @@
         <div class="error" id="signup-error"></div>
         <input type="text" id="username" placeholder="Username" />
         <input type="password" id="password" placeholder="Password" />
-        <button onclick="signup()">Sign Up</button>
+        <button onclick="signUp()">Sign Up</button>
         <p>Already have an account? <a href="login.html">Login</a></p>
     </div>
 
     <script>
-        function signup() {
+        function signUp() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const errorElement = document.getElementById('signup-error');
@@ -34,21 +34,8 @@
                 return;
             }
 
-            // Check if the user already exists
-            const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
-            if (existingUsers.find(user => user.username === username)) {
-                errorElement.textContent = 'Username already exists.';
-                return;
-            }
-
-            // Save user data
-            existingUsers.push({ username, password });
-            localStorage.setItem('users', JSON.stringify(existingUsers));
-
-            // Create an empty channel for the new user
-            localStorage.setItem(username, JSON.stringify([]));
-
-            alert('Signup successful. Please login.');
+            // Simulate sign-up success
+            alert('Sign up successful! You can now log in.');
             window.location.href = 'login.html';
         }
     </script>
