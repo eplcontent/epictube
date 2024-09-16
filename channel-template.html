@@ -67,7 +67,6 @@
     </div>
 
     <script>
-        // Function to get query parameters from URL
         function getQueryParam(param) {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get(param);
@@ -76,7 +75,6 @@
         const channelName = getQueryParam('channel');
         const loggedInUser = localStorage.getItem('loggedInUser');
 
-        // Check if the user is logged in and authorized to view this channel
         if (!loggedInUser) {
             alert('You must be logged in to access this page.');
             window.location.href = 'index.html';
@@ -89,13 +87,11 @@
 
         document.getElementById('channel-title').textContent = channelName;
 
-        // Toggle the visibility of the upload form
         function toggleUpload() {
             const uploadForm = document.getElementById('upload-form');
             uploadForm.style.display = uploadForm.style.display === 'none' ? 'block' : 'none';
         }
 
-        // Upload a video to the channel
         function uploadVideo() {
             const videoTitle = document.getElementById('video-title').value;
             const videoURL = document.getElementById('video-url').value;
@@ -111,22 +107,19 @@
                 return;
             }
 
-            // Retrieve the existing videos for the channel
             const videoList = JSON.parse(localStorage.getItem(channelName) || '[]');
 
-            // Add the new video to the list
             videoList.push({
                 title: videoTitle,
                 url: videoURL,
                 user: loggedInUser
             });
 
-            // Save the updated list to localStorage
             localStorage.setItem(channelName, JSON.stringify(videoList));
             displayVideos();
+            document.getElementById('upload-form').style.display = 'none';  // Hide upload form after successful upload
         }
 
-        // Display the list of videos for the channel
         function displayVideos() {
             const videoList = JSON.parse(localStorage.getItem(channelName) || '[]');
             const videoListContainer = document.getElementById('video-list');
@@ -147,9 +140,7 @@
             });
         }
 
-        // Display videos when the page loads
         displayVideos();
     </script>
 </body>
 </html>
-
