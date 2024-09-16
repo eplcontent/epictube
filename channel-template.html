@@ -5,29 +5,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Channel</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 0; }
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; background: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-        button { background-color: #007bff; color: #fff; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #0056b3; }
-        .video-list { margin: 20px 0; }
-        .video-item { margin-bottom: 20px; }
-        input[type="text"] { width: calc(100% - 22px); padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; }
-        .error { color: red; }
+        body { 
+            font-family: 'Comic Sans MS', cursive, sans-serif; 
+            background: linear-gradient(to bottom, #ffffff, #f4f4f4); 
+            margin: 0; 
+            padding: 0; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background: #fff; 
+            border-radius: 8px; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+        }
+        button { 
+            background-color: #007bff; 
+            color: #fff; 
+            border: none; 
+            padding: 10px 20px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 16px; 
+        }
+        button:hover { 
+            background-color: #0056b3; 
+        }
+        .video-list { 
+            margin: 20px 0; 
+        }
+        .video-item { 
+            margin-bottom: 20px; 
+        }
+        input[type="text"] { 
+            width: calc(100% - 22px); 
+            padding: 10px; 
+            margin: 10px 0; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+        }
+        .error { 
+            color: red; 
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 id="channel-title">Channel</h1>
         <button onclick="window.location.href='index.html'">Back to Home</button>
-        <div id="upload-section">
-            <button id="upload-button" onclick="toggleUpload()">Add Video</button>
-            <div id="upload-form" style="display: none;">
-                <h2>Add Video</h2>
-                <div class="error" id="upload-error"></div>
-                <input type="text" id="video-title" placeholder="Video Title" />
-                <input type="text" id="video-url" placeholder="Video URL" />
-                <button onclick="addVideo()">Add</button>
-            </div>
+        <button id="upload-button" onclick="toggleUpload()">Upload Video</button>
+        <div id="upload-form" style="display: none;">
+            <h2>Upload Video</h2>
+            <div class="error" id="upload-error"></div>
+            <input type="text" id="video-title" placeholder="Video Title" />
+            <input type="text" id="video-url" placeholder="Video URL" />
+            <button onclick="uploadVideo()">Upload</button>
         </div>
         <h2>Video List</h2>
         <div id="video-list" class="video-list"></div>
@@ -40,6 +72,13 @@
         }
 
         const channelName = getQueryParam('channel');
+        const loggedInUser = localStorage.getItem('loggedInUser');
+
+        if (loggedInUser && loggedInUser !== channelName) {
+            alert('You are not authorized to view this channel.');
+            window.location.href = 'index.html';
+        }
+
         document.getElementById('channel-title').textContent = channelName;
 
         function toggleUpload() {
@@ -47,55 +86,54 @@
             uploadForm.style.display = uploadForm.style.display === 'none' ? 'block' : 'none';
         }
 
-        function addVideo() {
+        function uploadVideo() {
             const videoTitle = document.getElementById('video-title').value;
-            const videoUrl = document.getElementById('video-url').value;
+            const videoURL = document.getElementById('video-url').value;
             const errorElement = document.getElementById('upload-error');
 
-            if (!videoTitle || !videoUrl) {
+            if (!videoTitle || !videoURL) {
                 errorElement.textContent = 'Please provide both title and video URL.';
                 return;
             }
 
-            const loggedInUser = sessionStorage.getItem('loggedInUser');
-            if (loggedInUser !== channelName) {
-                errorElement.textContent = 'You are not authorized to upload videos to this channel.';
+            if (loggedInUser && loggedInUser !== channelName) {
+                errorElement.textContent = 'You can only upload videos to your own channel.';
                 return;
             }
 
-            // Save the video information
-            const videos = JSON.parse(localStorage.getItem('videos') || '[]');
-            videos.push({ channel: channelName, title: videoTitle, url: videoUrl });
-            localStorage.setItem('videos', JSON.stringify(videos));
+            const videoList = JSON.parse(localStorage.getItem(channelName) || '[]');
 
-            // Refresh the video list
+            videoList.push({
+                title: videoTitle,
+                url: videoURL,
+                user: loggedInUser || 'Anonymous'
+            });
+
+            localStorage.setItem(channelName, JSON.stringify(videoList));
             displayVideos();
-
-            // Clear the form
-            document.getElementById('video-title').value = '';
-            document.getElementById('video-url').value = '';
-            toggleUpload();
         }
 
         function displayVideos() {
-            const videos = JSON.parse(localStorage.getItem('videos') || '[]');
-            const videoList = document.getElementById('video-list');
-            videoList.innerHTML = '';
+            const videoList = JSON.parse(localStorage.getItem(channelName) || '[]');
+            const videoListContainer = document.getElementById('video-list');
+            videoListContainer.innerHTML = '';
 
-            videos
-                .filter(video => video.channel === channelName)
-                .forEach(video => {
-                    const videoItem = document.createElement('div');
-                    videoItem.className = 'video-item';
-                    videoItem.innerHTML = `
-                        <h3>${video.title}</h3>
-                        <iframe width="560" height="315" src="${video.url}" frameborder="0" allowfullscreen></iframe>
-                    `;
-                    videoList.appendChild(videoItem);
-                });
+            videoList.forEach(video => {
+                const videoItem = document.createElement('div');
+                videoItem.classList.add('video-item');
+                videoItem.innerHTML = `
+                    <h3>${video.title}</h3>
+                    <video width="600" controls>
+                        <source src="${video.url}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p>Uploaded by: ${video.user}</p>
+                `;
+                videoListContainer.appendChild(videoItem);
+            });
         }
 
-        // Display videos when the page loads
+        // Display videos on page load
         displayVideos();
     </script>
 </body>
