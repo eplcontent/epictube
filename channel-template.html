@@ -38,7 +38,7 @@
         .video-item {
             margin-bottom: 20px;
         }
-        input[type="text"], input[type="url"] {
+        input[type="text"], input[type="url"], input[type="file"] {
             width: calc(100% - 22px);
             padding: 10px;
             margin: 10px 0;
@@ -48,11 +48,19 @@
         .error {
             color: red;
         }
+        #profile-picture {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 id="channel-title">Channel</h1>
+        <img id="profile-picture" src="" alt="Profile Picture" />
         <button onclick="window.location.href='index.html'">Back to Home</button>
         <button id="upload-button" onclick="toggleUpload()">Upload Video</button>
         <div id="upload-form" style="display: none;">
@@ -76,6 +84,12 @@
 
         document.getElementById('channel-title').textContent = channelName;
 
+        // Set profile picture
+        const profilePicture = localStorage.getItem('profilePicture');
+        if (profilePicture) {
+            document.getElementById('profile-picture').src = profilePicture;
+        }
+
         function toggleUpload() {
             const uploadForm = document.getElementById('upload-form');
             uploadForm.style.display = uploadForm.style.display === 'none' ? 'block' : 'none';
@@ -88,11 +102,6 @@
 
             if (!videoTitle || !videoURL) {
                 errorElement.textContent = 'Please provide both title and video URL.';
-                return;
-            }
-
-            if (loggedInUser && loggedInUser !== channelName) {
-                errorElement.textContent = 'You can only upload videos to your own channel.';
                 return;
             }
 
@@ -129,13 +138,7 @@
             });
         }
 
-        function checkAuthorization() {
-            if (loggedInUser && loggedInUser === channelName) {
-                displayVideos();
-            }
-        }
-
-        checkAuthorization();
+        displayVideos();
     </script>
 </body>
 </html>
