@@ -66,20 +66,51 @@
     </div>
 
     <script>
-        function getQueryParam(param) {
+        function getQueryStringParameter(name) {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
+            return urlParams.get(name);
         }
 
-        const channelName = getQueryParam('channel');
-        const loggedInUser = localStorage.getItem('loggedInUser');
+        function loadChannel() {
+            const channel = getQueryStringParameter('channel');
+            const loggedInUser = localStorage.getItem('loggedInUser');
 
-        if (loggedInUser && loggedInUser !== channelName) {
-            alert('You are not authorized to view this channel.');
-            window.location.href = 'index.html';
+            if (!channel) {
+                document.getElementById('channel-title').textContent = 'Channel Not Found';
+                return;
+            }
+
+            document.getElementById('channel-title').textContent = `${channel}'s Channel`;
+
+            // Load profile picture
+            const profilePictureURL = localStorage.getItem(`${channel}_profilePicture`);
+            if (profilePictureURL) {
+                const profilePictureSection = document.createElement('div');
+                profilePictureSection.innerHTML = `<img src="${profilePictureURL}" alt="${channel}'s Profile Picture" style="max-width: 100px; border-radius: 50%; margin-bottom: 20px;">`;
+                document.querySelector('.container').insertBefore(profilePictureSection, document.querySelector('#upload-button'));
+            }
+
+            // Check if logged-in user is the same as the channel owner
+            if (loggedInUser && loggedInUser === channel) {
+                document.getElementById('upload-button').style.display = 'inline';
+            }
+
+            // Load videos
+            loadVideos(channel);
         }
 
-        document.getElementById('channel-title').textContent = channelName;
+        function loadVideos(channel) {
+            const videoList = document.getElementById('video-list');
+            videoList.innerHTML = '';
+
+            const videos = JSON.parse(localStorage.getItem(`${channel}_videos`) || '[]');
+            videos.forEach(video => {
+                const videoItem = document.createElement('div');
+                videoItem.className = 'video-item';
+                videoItem.innerHTML = `<h3>${video.title}</h3><a href="${video.url}" target="_blank">Watch Video</a>`;
+                videoList.appendChild(videoItem);
+            });
+        }
 
         function toggleUpload() {
             const uploadForm = document.getElementById('upload-form');
@@ -89,52 +120,34 @@
         function uploadVideo() {
             const videoTitle = document.getElementById('video-title').value;
             const videoURL = document.getElementById('video-url').value;
+            const channel = getQueryStringParameter('channel');
+            const loggedInUser = localStorage.getItem('loggedInUser');
             const errorElement = document.getElementById('upload-error');
 
             if (!videoTitle || !videoURL) {
-                errorElement.textContent = 'Please provide both title and video URL.';
+                errorElement.textContent = 'Please provide both video title and URL.';
                 return;
             }
 
-            if (loggedInUser && loggedInUser !== channelName) {
+            if (loggedInUser !== channel) {
                 errorElement.textContent = 'You can only upload videos to your own channel.';
                 return;
             }
 
-            const videoList = JSON.parse(localStorage.getItem(channelName) || '[]');
+            let videos = JSON.parse(localStorage.getItem(`${channel}_videos`) || '[]');
+            videos.push({ title: videoTitle, url: videoURL });
+            localStorage.setItem(`${channel}_videos`, JSON.stringify(videos));
+            loadVideos(channel);
 
-            videoList.push({
-                title: videoTitle,
-                url: videoURL,
-                user: loggedInUser || 'Anonymous'
-            });
-
-            localStorage.setItem(channelName, JSON.stringify(videoList));
-            displayVideos();
+            // Clear form
+            document.getElementById('video-title').value = '';
+            document.getElementById('video-url').value = '';
+            errorElement.textContent = '';
         }
 
-        function displayVideos() {
-            const videoList = JSON.parse(localStorage.getItem(channelName) || '[]');
-            const videoListContainer = document.getElementById('video-list');
-            videoListContainer.innerHTML = '';
-
-            videoList.forEach(video => {
-                const videoItem = document.createElement('div');
-                videoItem.classList.add('video-item');
-                videoItem.innerHTML = `
-                    <h3>${video.title}</h3>
-                    <video width="600" controls>
-                        <source src="${video.url}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    <p>Uploaded by: ${video.user}</p>
-                `;
-                videoListContainer.appendChild(videoItem);
-            });
-        }
-
-        // Display videos on page load
-        displayVideos();
+        // Load channel on page load
+        loadChannel();
     </script>
 </body>
 </html>
+
