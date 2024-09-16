@@ -34,8 +34,16 @@
                 return;
             }
 
-            // Simulate a login success, redirect to a default channel
-            window.location.href = `channel.html?channel=${username}`;
+            // Validate user credentials
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user && user.username === username && user.password === password) {
+                // Set logged-in user in session storage
+                sessionStorage.setItem('loggedInUser', username);
+                // Redirect to the user's channel
+                window.location.href = `channel.html?channel=${username}`;
+            } else {
+                errorElement.textContent = 'Invalid username or password.';
+            }
         }
     </script>
 </body>
