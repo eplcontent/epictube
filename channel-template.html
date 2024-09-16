@@ -19,13 +19,15 @@
     <div class="container">
         <h1 id="channel-title">Channel</h1>
         <button onclick="window.location.href='index.html'">Back to Home</button>
-        <button id="upload-button" onclick="toggleUpload()">Add Video</button>
-        <div id="upload-form" style="display: none;">
-            <h2>Add Video</h2>
-            <div class="error" id="upload-error"></div>
-            <input type="text" id="video-title" placeholder="Video Title" />
-            <input type="text" id="video-url" placeholder="Video URL" />
-            <button onclick="addVideo()">Add</button>
+        <div id="upload-section">
+            <button id="upload-button" onclick="toggleUpload()">Add Video</button>
+            <div id="upload-form" style="display: none;">
+                <h2>Add Video</h2>
+                <div class="error" id="upload-error"></div>
+                <input type="text" id="video-title" placeholder="Video Title" />
+                <input type="text" id="video-url" placeholder="Video URL" />
+                <button onclick="addVideo()">Add</button>
+            </div>
         </div>
         <h2>Video List</h2>
         <div id="video-list" class="video-list"></div>
@@ -38,7 +40,6 @@
         }
 
         const channelName = getQueryParam('channel');
-
         document.getElementById('channel-title').textContent = channelName;
 
         function toggleUpload() {
@@ -56,37 +57,45 @@
                 return;
             }
 
-            const videoList = JSON.parse(localStorage.getItem(channelName) || '[]');
-            
-            videoList.push({
-                title: videoTitle,
-                url: videoUrl
-            });
+            const loggedInUser = sessionStorage.getItem('loggedInUser');
+            if (loggedInUser !== channelName) {
+                errorElement.textContent = 'You are not authorized to upload videos to this channel.';
+                return;
+            }
 
-            localStorage.setItem(channelName, JSON.stringify(videoList));
+            // Save the video information
+            const videos = JSON.parse(localStorage.getItem('videos') || '[]');
+            videos.push({ channel: channelName, title: videoTitle, url: videoUrl });
+            localStorage.setItem('videos', JSON.stringify(videos));
+
+            // Refresh the video list
             displayVideos();
+
+            // Clear the form
+            document.getElementById('video-title').value = '';
+            document.getElementById('video-url').value = '';
+            toggleUpload();
         }
 
         function displayVideos() {
-            const videoList = JSON.parse(localStorage.getItem(channelName) || '[]');
-            const videoListContainer = document.getElementById('video-list');
-            videoListContainer.innerHTML = '';
+            const videos = JSON.parse(localStorage.getItem('videos') || '[]');
+            const videoList = document.getElementById('video-list');
+            videoList.innerHTML = '';
 
-            videoList.forEach(video => {
-                const videoItem = document.createElement('div');
-                videoItem.classList.add('video-item');
-                videoItem.innerHTML = `
-                    <h3>${video.title}</h3>
-                    <video width="600" controls>
-                        <source src="${video.url}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                `;
-                videoListContainer.appendChild(videoItem);
-            });
+            videos
+                .filter(video => video.channel === channelName)
+                .forEach(video => {
+                    const videoItem = document.createElement('div');
+                    videoItem.className = 'video-item';
+                    videoItem.innerHTML = `
+                        <h3>${video.title}</h3>
+                        <iframe width="560" height="315" src="${video.url}" frameborder="0" allowfullscreen></iframe>
+                    `;
+                    videoList.appendChild(videoItem);
+                });
         }
 
-        // Display videos on page load
+        // Display videos when the page loads
         displayVideos();
     </script>
 </body>
