@@ -34,7 +34,17 @@
                 return;
             }
 
-            // Simulate sign-up success
+            // Save user credentials in local storage (for demonstration purposes)
+            localStorage.setItem('user', JSON.stringify({ username, password }));
+
+            // Create a new channel for the user
+            const channels = JSON.parse(localStorage.getItem('channels') || '[]');
+            if (!channels.includes(username)) {
+                channels.push(username);
+                localStorage.setItem('channels', JSON.stringify(channels));
+            }
+
+            // Redirect to login page
             alert('Sign up successful! You can now log in.');
             window.location.href = 'login.html';
         }
