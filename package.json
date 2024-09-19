@@ -1,0 +1,26 @@
+{
+  "name": "epictube",
+  "version": "1.0.0",
+  "description": "Epicontent's uploading platform.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js", // Start your server
+    "build": "webpack --mode production", // Build your app (if using Webpack)
+    "dev": "webpack serve --mode development" // Serve your app in development
+  },
+  "dependencies": {
+    "express": "^4.17.1", // For backend server
+    "mongoose": "^5.10.9", // If you're using MongoDB
+    "cors": "^2.8.5", // For enabling CORS
+    "dotenv": "^8.2.0" // For environment variables
+  },
+  "devDependencies": {
+    "webpack": "^5.0.0", // If using Webpack for bundling
+    "webpack-cli": "^4.0.0",
+    "babel-loader": "^8.1.0", // For transpiling modern JavaScript
+    "html-webpack-plugin": "^5.0.0" // For generating HTML files
+  },
+  "keywords": ["youtube", "clone", "video"],
+  "author": "Epicontent",
+  "license": "MIT"
+}
