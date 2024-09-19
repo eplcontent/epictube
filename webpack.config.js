@@ -5,30 +5,31 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   module: {
     rules: [
       {
-        test: /\.(js|jsx)$/, // Handle both .js and .jsx files
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
-          loader: 'babel-loader' // Transpile JS and JSX files
-        }
+          loader: 'babel-loader',
+        },
       },
       {
-        test: /\.css$/, // Handle .css files
-        use: ['style-loader', 'css-loader'] // Apply these loaders for CSS
-      }
-    ]
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
   },
   resolve: {
-    extensions: ['.js', '.jsx'] // Resolve these extensions
+    extensions: ['.js', '.jsx'],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './public/index.html' // Use your HTML template
-    })
+      template: './public/index.html',
+    }),
   ],
-  mode: 'production' // Change to 'development' for local testing
+  mode: 'production',
 };
+
